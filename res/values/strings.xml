@@ -7,6 +7,6 @@
     <string name="button_add_text">Add comment</string>
     <string name="button_delete_text">Delete Content</string>
     <string name="title_activity_custom_list">CustomList</string>
-    <string name="title_activity_home">Home</string>
+    <string name="title_activity_home">Walk North Hill</string>
     <string name="header_text">Walk North Hill</string>
 </resources>
