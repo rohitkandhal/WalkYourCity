@@ -23,7 +23,6 @@ public class FragmentDestinations extends Fragment {
 	{
 		super.onCreate(savedInstanceState);
 		View view = inflater.inflate(R.layout.fragment_dest_list,container,false);
-		
 		return view;
 	}
 	

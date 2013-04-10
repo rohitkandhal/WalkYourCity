@@ -2,6 +2,7 @@
 package com.csc591.view;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.csc591.DAL.Destination;
-import com.csc591.view.FragmentDestinations;
-import com.csc591.view.R;
 
 public class DestinationListAdapter extends ArrayAdapter<Destination> {
 	
@@ -20,6 +19,7 @@ public class DestinationListAdapter extends ArrayAdapter<Destination> {
 	{
 		ImageView imgIcon;
 		TextView txtName;
+		TextView txtTime;
 	}
 	
 	Context context;
@@ -36,6 +36,7 @@ public class DestinationListAdapter extends ArrayAdapter<Destination> {
 		
 	}
 	
+	@SuppressLint("DefaultLocale")
 	public View getView(int postion, View convertView, ViewGroup parent)
 	{
 		View listItem = convertView;
@@ -51,6 +52,7 @@ public class DestinationListAdapter extends ArrayAdapter<Destination> {
 			
 			placeData.txtName = (TextView)listItem.findViewById(R.id.txtTitle);
 			
+			placeData.txtTime = (TextView)listItem.findViewById(R.id.txtTime);
 			listItem.setTag(placeData);
 		}
 		else
@@ -59,8 +61,9 @@ public class DestinationListAdapter extends ArrayAdapter<Destination> {
 		}
 		
 		Destination destination = data.get(postion);
-		placeData.txtName.setText(destination.getName());
+		placeData.txtName.setText(destination.getName().toUpperCase());
 		placeData.imgIcon.setImageResource(getIcon(destination.getType()));
+		placeData.txtTime.setText("in XXX minutes");
 		
 		return listItem;
 	}
