@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.loaderstest"
+    package="com.csc591.view"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -14,13 +14,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.loaderstest.LoaderHome"
-            android:label="@string/app_name" >
-           
-        </activity>
-        <activity
-            android:name="com.example.loaderstest.DestinationListActivity"
-            android:label="@string/title_activity_custom_list" >
+            android:name="com.csc591.view.Home"
+            android:label="@string/title_activity_home" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
