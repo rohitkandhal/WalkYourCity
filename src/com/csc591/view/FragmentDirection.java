@@ -36,9 +36,9 @@ public class FragmentDirection extends Activity {
 		
 		Marker kiel = map.addMarker(new MarkerOptions().position(KIEL).title("Kiel").snippet("This is cool").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
 		
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 30));
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
 		
-		map.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
+		map.animateCamera(CameraUpdateFactory.zoomTo(15), 700, null);
 		
 	}
 	
