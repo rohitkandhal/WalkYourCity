@@ -1,11 +1,24 @@
 package com.csc591.view;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Window;
 
-public class Home extends Activity{
+import com.csc591.view.FragmentDestinations.FragmentDestinationInterface;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
+
+public class Home extends Activity implements FragmentDestinationInterface{
+
+	static final LatLng HAMBURG = new LatLng(53.558,9.927); 
+	static final LatLng KIEL = new LatLng(53.551, 9.993);
+	
+	private GoogleMap map;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -17,6 +30,18 @@ public class Home extends Activity{
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_home);
+	/*	
+		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.fragmentDirection)).getMap();
+		
+		Marker hamburg = map.addMarker(new MarkerOptions().position(HAMBURG).title("Title"));
+		
+		Marker kiel = map.addMarker(new MarkerOptions().position(KIEL).title("Kiel").snippet("This is cool").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
+		
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 30));
+		
+		map.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
+		*/
+	
 		//ViewServer.get(this).addWindow(this);
 	}
 	
@@ -29,5 +54,60 @@ public class Home extends Activity{
         super.onResume();
         //ViewServer.get(this).setFocusedWindow(this);
    }
+
+    
+	@Override
+	public void onListItemClickHandler(String text)
+	{
+		Intent myIntent = new Intent(Home.this, FragmentDirection.class);
+		//myIntent.putExtra("key", value); //Optional parameters
+		Home.this.startActivity(myIntent);
+	}
+	
+	public void onListItemClickHandler_OLD_NOT_WORKING(String text) {
+		
+		/** Getting the fragment transaction object, which can be used to add, remove or replace a fragment */
+		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+		
+		/** Getting the existing detailed fragment object, if it already exists. The fragment object is retrieved by its tag name*Frag*
+		* Getting the orientation ( Landscape or Portrait ) of the screen */
+		int orientation = getResources().getConfiguration().orientation;
+		
+		/** Landscape Mode */
+		if(orientation == Configuration.ORIENTATION_PORTRAIT ){
+			/** Getting the fragment manager for fragment related operations */
+			//FragmentManager fragmentManager = getFragmentManager();
+			//Fragment prevFrag = fragmentManager.findFragmentByTag("com.csc591.view.FragmentDestinations");
+			
+			// Remove the existing detailed fragment object if it exists */
+		//	if(prevFrag!=null)
+		//		fragmentTransaction.remove(prevFrag);
+		
+			// Instantiating the fragment FragmnetDirection */
+			//FragmentDirection fragment = new FragmentDirection();
+		
+			// Creating a bundle object to pass the data(the clicked item's position) from the activity to the fragment */
+			//Bundle b = new Bundle();
+		
+			// Setting the data to the bundle object */
+			//b.putInt("position", position);
+		
+			// Setting the bundle object to the fragment */
+			//fragment.setArguments(b);
+		
+			// Adding the fragment to the fragment transaction */
+			//fragmentTransaction.add(R.id.fragmentDirection, fragment);
+
+		//	fragmentTransaction.replace(R.id.fragmentDestinations,fragment);
+			//getFragmentManager().beginTransaction().add(R.id.fragmentDirection, fragment).commit();
+			// Adding this transaction to backstack */
+		//	fragmentTransaction.addToBackStack(null);
+		
+			// Making this transaction in effect */
+			//fragmentTransaction.commit();
+		        
+		}
+		
+	}
 
 }

@@ -7,7 +7,22 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="17" />
+    <uses-feature 
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+	<permission 
+        android:name="com.csc591.view.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature"></permission>
 
+   	<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-feature android:name="android.hardware.location.gps"/>
+    <uses-permission android:name="com.csc591.view.permission.MAPS_RECEIVE"/>
+    
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -15,13 +30,24 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.csc591.view.Home"
-            android:label="@string/title_activity_home" >
+            android:label="@string/title_activity_home"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name="com.csc591.view.FragmentDirection"
+            android:label="@string/title_activity_home"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+         <meta-data 
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBEqIdNDPyiXLAjezph5A0Kx2qIng8V1Y4"/>
     </application>
 
 </manifest>
