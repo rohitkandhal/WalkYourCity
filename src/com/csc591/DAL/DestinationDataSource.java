@@ -109,8 +109,13 @@ public class DestinationDataSource {
 	{
 		Destination dest = new Destination();
 		dest.setId(cursor.getLong(0));
-		dest.setLatitude(cursor.getInt(1));
-		dest.setLongitude(cursor.getInt(2));
+		// BUG FIX: In SQLite everything is stored as text however you need to take extra care
+		// while fetching data from the database. Although while storing the Latitude, Longitude 
+		// data type is INTEGER (see MySQLiteHelper) but actually Lat, Lng are double values. 
+		// while fetching data, use proper data type.
+		// Credits: http://stackoverflow.com/questions/3083796/storing-double-values-in-sqlite-how-to-ensure-precision?answertab=votes#tab-top
+		dest.setLatitude(cursor.getDouble(1));
+		dest.setLongitude(cursor.getDouble(2));
 		dest.setName(cursor.getString(3));
 		dest.setType(cursor.getInt(4));
 		dest.setDescription(cursor.getString(5));

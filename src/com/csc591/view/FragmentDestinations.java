@@ -26,7 +26,7 @@ public class FragmentDestinations extends Fragment {
 	private DestinationDataSource dataSource;
 	
 	public interface FragmentDestinationInterface{
-		public void onListItemClickHandler(String text);
+		public void onListItemClickHandler(Destination destination);
 	}
 	
 	public FragmentDestinationInterface homeActivityInterface;
@@ -110,7 +110,7 @@ public class FragmentDestinations extends Fragment {
 	
 	public void onListViewItemClick(int position)
 	{
-		homeActivityInterface.onListItemClickHandler("Rohit this is position" + position);
+		homeActivityInterface.onListItemClickHandler(destinations.get(position));
 	}
 	
 	public void onListViewItemHandle(int position)

@@ -1,7 +1,13 @@
 package com.csc591.DAL;
 
+import java.io.Serializable;
 
-public class Destination {
+// SERIALIZABLE - implemented as serializable because we need to pass the destination object from 
+// home activity to map direction activity. You can send string or int directly from one activity to another
+// but to send an object it should be either serializable or parcable type. Implementation of serializable is 
+// easier and done currently but performance of parcable type is much more better than
+// serializable. Can think of changing to parceable type if suggested. (Parceable is somewhat difficult to implement) 
+public class Destination implements Serializable{
 	
 	public long getId() {
 		return id;

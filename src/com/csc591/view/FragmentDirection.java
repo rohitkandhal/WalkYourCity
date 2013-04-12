@@ -1,9 +1,11 @@
 package com.csc591.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 
+import com.csc591.DAL.Destination;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -17,8 +19,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 // pervious version) using Activity here. Though no difference on GUI.
 public class FragmentDirection extends Activity {
 
-	static final LatLng HAMBURG = new LatLng(53.558,9.927); 
-	static final LatLng KIEL = new LatLng(53.551, 9.993);
+	// dummy LatLng constant - Unused
+	static final LatLng NORTHHILL = new LatLng(53.558,9.927); 
 	
 	private GoogleMap map;
 	
@@ -30,27 +32,21 @@ public class FragmentDirection extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_directions);
 		
+		Intent receivedIntent = getIntent();
+		Destination receivedDestination = (Destination)receivedIntent.getSerializableExtra("DestinationObject");
+		
+		LatLng destinationLatLng = new LatLng(receivedDestination.getLatitude(), receivedDestination.getLongitude());
+		
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.fragmentDirect)).getMap();
 		
-		Marker hamburg = map.addMarker(new MarkerOptions().position(HAMBURG).title("Title"));
-		
-		Marker kiel = map.addMarker(new MarkerOptions().position(KIEL).title("Kiel").snippet("This is cool").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
-		
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
-		
-		map.animateCamera(CameraUpdateFactory.zoomTo(15), 700, null);
-		
-	}
-	
-	
-	/*
-		public View onCreateView(LayoutInflater inflater,
-			ViewGroup container,
-			Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		View view = inflater.inflate(R.layout.fragment_directions,container,false);
+		Marker destinationMarker = map.addMarker(new MarkerOptions().position(destinationLatLng).title(receivedDestination.getName()).snippet(receivedDestination.getDescription()));
+
+		// Following marker type should be used in case of custom marker
+		//Marker kiel = map.addMarker(new MarkerOptions().position(destinationLatLng).title(receivedDestination.getName()).snippet(receivedDestination.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.drawable.wyc_green)));
+
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLng, 15));
+		// Provide default zoom level (i.e. how much map area to bring in focus)
+		map.animateCamera(CameraUpdateFactory.zoomTo(17), 700, null);
 		
 	}
-	*/	
 }

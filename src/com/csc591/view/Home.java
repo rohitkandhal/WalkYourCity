@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Window;
 
+import com.csc591.DAL.Destination;
 import com.csc591.view.FragmentDestinations.FragmentDestinationInterface;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -27,21 +28,11 @@ public class Home extends Activity implements FragmentDestinationInterface{
 		
 		// Uses below to Remove notification bar but not required in our application. Helpful in games
 		//this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_home);
-	/*	
-		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.fragmentDirection)).getMap();
-		
-		Marker hamburg = map.addMarker(new MarkerOptions().position(HAMBURG).title("Title"));
-		
-		Marker kiel = map.addMarker(new MarkerOptions().position(KIEL).title("Kiel").snippet("This is cool").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
-		
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 30));
-		
-		map.animateCamera(CameraUpdateFactory.zoomTo(14), 2000, null);
-		*/
-	
+
 		//ViewServer.get(this).addWindow(this);
 	}
 	
@@ -57,10 +48,10 @@ public class Home extends Activity implements FragmentDestinationInterface{
 
     
 	@Override
-	public void onListItemClickHandler(String text)
+	public void onListItemClickHandler(Destination destination)
 	{
 		Intent myIntent = new Intent(Home.this, FragmentDirection.class);
-		//myIntent.putExtra("key", value); //Optional parameters
+		myIntent.putExtra("DestinationObject", destination); //Optional parameters
 		Home.this.startActivity(myIntent);
 	}
 	

@@ -43,7 +43,6 @@
             android:name="com.csc591.view.FragmentDirection"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait" >
-
         </activity>
         
          <meta-data 
