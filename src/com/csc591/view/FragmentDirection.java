@@ -1,7 +1,10 @@
 package com.csc591.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Window;
 
@@ -9,7 +12,6 @@ import com.csc591.DAL.Destination;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -39,14 +41,42 @@ public class FragmentDirection extends Activity {
 		
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.fragmentDirect)).getMap();
 		
+		LatLng dummyLatLng = new LatLng(getCurrentLocation().getLatitude(), getCurrentLocation().getLongitude());
+		
+		// Get current location either from GPS or Network Provider
+		Marker sourceMarker = map.addMarker(new MarkerOptions().position(dummyLatLng).title(receivedDestination.getName()).snippet(receivedDestination.getDescription()));
+		
+		// Destination placemarker
 		Marker destinationMarker = map.addMarker(new MarkerOptions().position(destinationLatLng).title(receivedDestination.getName()).snippet(receivedDestination.getDescription()));
 
 		// Following marker type should be used in case of custom marker
 		//Marker kiel = map.addMarker(new MarkerOptions().position(destinationLatLng).title(receivedDestination.getName()).snippet(receivedDestination.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.drawable.wyc_green)));
 
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLng, 15));
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(dummyLatLng, 15));
 		// Provide default zoom level (i.e. how much map area to bring in focus)
 		map.animateCamera(CameraUpdateFactory.zoomTo(17), 700, null);
 		
+	}
+	
+	private Location getCurrentLocation()
+	{
+		LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		
+		Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+	    long GPSLocationTime = 0;
+	    if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
+
+	    long NetLocationTime = 0;
+
+	    if (null != locationNet) {
+	        NetLocationTime = locationNet.getTime();
+	    }
+
+	    if ( 0 < GPSLocationTime - NetLocationTime ) {
+	        return locationGPS;
+	    }
+	    return locationNet;
 	}
 }
