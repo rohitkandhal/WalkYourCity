@@ -7,6 +7,7 @@ import java.io.Serializable;
 // but to send an object it should be either serializable or parcable type. Implementation of serializable is 
 // easier and done currently but performance of parcable type is much more better than
 // serializable. Can think of changing to parceable type if suggested. (Parceable is somewhat difficult to implement) 
+@SuppressWarnings("serial")
 public class Destination implements Serializable{
 	
 	public long getId() {
