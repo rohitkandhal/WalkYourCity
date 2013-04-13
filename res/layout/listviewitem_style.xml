@@ -1,14 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" 
-    android:layout_width="fill_parent"
-    android:layout_height="70dp"
-    android:padding="5dp"	>
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="3dp"	>
+    
+    <!--  Placing controls side to side. 2 textview on left, 
+    1 imageview for go on right -->
+     <ImageView android:id="@+id/imgIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp" 
+        android:scaleType="fitCenter"/>
+      
+       <TextView android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="2dp"/>
+       
+       <TextView android:id="@+id/txtTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:layout_marginLeft="8dp"
+        android:layout_below="@id/txtTitle"
+        /> 
 
+   <!-- Use Following XML for placing control over an image.
       <ImageView android:id="@+id/imgIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dp" />
+        android:layout_marginRight="5dp" 
+        android:scaleType="fitCenter"/>
       
        <TextView android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
@@ -34,5 +66,5 @@
         android:layout_marginBottom="5dp"
         android:layout_alignLeft="@+id/imgIcon"
 		android:layout_alignTop="@+id/imgIcon"
-		android:layout_alignBottom="@+id/imgIcon"/>
+		android:layout_alignBottom="@+id/imgIcon"/> -->
 </RelativeLayout>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.provider.CalendarContract.Colors;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,7 @@ public class DestinationListAdapter extends ArrayAdapter<Destination> {
 		placeData.txtName.setText(destination.getName().toUpperCase());
 		placeData.imgIcon.setImageResource(getIcon(destination.getType()));
 		placeData.txtTime.setText("in XXX minutes");
-		
+		listItem.setBackgroundColor(getColorCode(destination.getType()));
 		return listItem;
 	}
 	
@@ -105,19 +106,44 @@ public class DestinationListAdapter extends ArrayAdapter<Destination> {
 		switch(type)
 		{
 		case 0:
-			return R.drawable.blue;
+			//return R.drawable.blue;
+			return R.drawable.list_blue;
 			
 		case 1:
-			return R.drawable.sky;
+			//return R.drawable.sky;
+			return R.drawable.list_sky;
 			
 		case 2:
-			return R.drawable.orange;
+			return R.drawable.list_orange;
+			//return R.drawable.orange;
 			
 		case 3:
-			return R.drawable.green;
+			return R.drawable.list_green;
+			//return R.drawable.green;
 			
 			default:
-				return R.drawable.blue;
+				return R.drawable.list_green;
 		}	
+	}
+	
+	public int getColorCode(int color)
+	{
+		switch(color)
+		{
+		case 0:
+			return this.hdl.getResources().getColor(R.color.blue);
+			
+		case 1:
+			return this.hdl.getResources().getColor(R.color.sky);
+
+		case 2:
+			return this.hdl.getResources().getColor(R.color.orange);
+			
+		case 3:
+			return this.hdl.getResources().getColor(R.color.green);
+			
+			default:
+				return this.hdl.getResources().getColor(R.color.green);
+		}
 	}
 }
