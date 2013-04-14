@@ -1,5 +1,6 @@
 package com.csc591.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -19,10 +20,14 @@ import android.widget.PopupWindow;
 
 import com.csc591.DAL.Destination;
 import com.csc591.DAL.DestinationDataSource;
+import com.csc591.view.Home.OnFooterCategorySelectionChanged;
 
-public class FragmentDestinations extends Fragment {
+public class FragmentDestinations extends Fragment implements OnFooterCategorySelectionChanged{
 
-	private List<Destination> destinations;
+	private List<Destination> allDestinations;
+	private List<Destination> selectedDestinations;
+	DestinationListAdapter destinationListAdapter;
+	
 	private DestinationDataSource dataSource;
 	
 	public interface FragmentDestinationInterface{
@@ -110,7 +115,7 @@ public class FragmentDestinations extends Fragment {
 	
 	public void onListViewItemClick(int position)
 	{
-		homeActivityInterface.onListItemClickHandler(destinations.get(position));
+		homeActivityInterface.onListItemClickHandler(allDestinations.get(position));
 	}
 	
 	public void onListViewItemHandle(int position)
@@ -166,17 +171,18 @@ public class FragmentDestinations extends Fragment {
 			dataSource.CreateNewHARDCODEDDataBase();
 		}
 		
-		destinations = dataSource.getAllDestinations();
+		allDestinations = dataSource.getAllDestinations();
+		this.selectedDestinations = dataSource.getAllDestinations();;
 	}
 	
 	private void setUpDestinationList()
 	{
-		DestinationListAdapter adapter = new DestinationListAdapter(this,
-				R.layout.listviewitem_style, destinations);	
+		 this.destinationListAdapter = new DestinationListAdapter(this,
+				R.layout.listviewitem_style, selectedDestinations);	
 		
 		// For custom list view and interactive output.
 		ListView lv = (ListView)this.getView().findViewById(R.id.listViewDestinations);
-		lv.setAdapter(adapter);
+		lv.setAdapter(this.destinationListAdapter);
 	}
 	
 	public void onResume()
@@ -189,5 +195,21 @@ public class FragmentDestinations extends Fragment {
 	{
 		dataSource.close();
 		super.onPause();
+	}
+	
+	@Override
+	public void onCategoryChangeHandler(ArrayList<Integer> newFlags) {
+
+		this.selectedDestinations.clear();
+		
+		for(Destination des: allDestinations)
+		{
+			if(newFlags.contains(des.getType()))
+			{
+				this.selectedDestinations.add(des);
+			}
+		}
+		
+		this.destinationListAdapter.notifyDataSetChanged();
 	}
 }

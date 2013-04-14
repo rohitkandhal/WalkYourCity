@@ -16,7 +16,15 @@
         android:id="@+id/fragmentDestinations"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="0.4"
         class="com.csc591.view.FragmentDestinations"/>
+    
+      <fragment
+        android:id="@+id/fragmentFooter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.6"
+        class="com.csc591.view.FragmentFooter"/>
       
      
 </LinearLayout>

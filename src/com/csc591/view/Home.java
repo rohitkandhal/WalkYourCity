@@ -1,19 +1,19 @@
 package com.csc591.view;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
-import android.app.FragmentTransaction;
+import android.app.Fragment;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Window;
 
 import com.csc591.DAL.Destination;
 import com.csc591.view.FragmentDestinations.FragmentDestinationInterface;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
+import com.csc591.view.FragmentFooter.FragmentFooterInterface;
 
 
-public class Home extends Activity implements FragmentDestinationInterface{
+public class Home extends Activity implements FragmentDestinationInterface, FragmentFooterInterface{
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +53,14 @@ public class Home extends Activity implements FragmentDestinationInterface{
 	public void onListItemClickHandler_OLD_NOT_WORKING(String text) {
 		
 		/** Getting the fragment transaction object, which can be used to add, remove or replace a fragment */
-		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+		//FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 		
 		/** Getting the existing detailed fragment object, if it already exists. The fragment object is retrieved by its tag name*Frag*
 		* Getting the orientation ( Landscape or Portrait ) of the screen */
-		int orientation = getResources().getConfiguration().orientation;
+		//int orientation = getResources().getConfiguration().orientation;
 		
 		/** Landscape Mode */
-		if(orientation == Configuration.ORIENTATION_PORTRAIT ){
+		//if(orientation == Configuration.ORIENTATION_PORTRAIT ){
 			/** Getting the fragment manager for fragment related operations */
 			//FragmentManager fragmentManager = getFragmentManager();
 			//Fragment prevFrag = fragmentManager.findFragmentByTag("com.csc591.view.FragmentDestinations");
@@ -94,6 +94,18 @@ public class Home extends Activity implements FragmentDestinationInterface{
 		        
 		}
 		
+	public interface OnFooterCategorySelectionChanged{
+		public void onCategoryChangeHandler(ArrayList<Integer> newFlags);
+	}
+	
+	public void onCategoryButtonClickHandler(ArrayList<Integer> newFlags)
+	{
+		Fragment destinationFragment = (Fragment)getFragmentManager().findFragmentById(R.id.fragmentDestinations);
+		
+		if(destinationFragment instanceof OnFooterCategorySelectionChanged)
+		{
+			((OnFooterCategorySelectionChanged) destinationFragment).onCategoryChangeHandler(newFlags);
+		}
 	}
 
 }

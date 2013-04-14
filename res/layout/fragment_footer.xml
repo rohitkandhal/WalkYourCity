@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    style="?android:attr/buttonBarStyle" >
+    
+    <Button
+        android:id="@+id/amusement_button"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@drawable/amusement"
+        android:text="@string/button_amusement"
+        android:textColor="#ffff"
+        android:textSize="12sp">
+    </Button>
+
+    <Button
+        android:id="@+id/landmarks_button"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="0dp" 
+        android:layout_weight="1.0"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@drawable/landmarks"
+        android:text="@string/button_landmarks"
+        android:textColor="#ffff"
+        android:textSize="12sp">
+    </Button>
+
+    <Button
+        android:id="@+id/commerce_button"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="0dp"
+        android:layout_weight="1.0"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@drawable/commerce"
+        android:text="@string/button_commerce"
+        android:textColor="#ffff"
+        android:textSize="12sp">
+    </Button>
+
+    <Button
+        android:id="@+id/openspace_button"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="0dp"
+        android:layout_weight="1.0"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@drawable/open_space"
+        android:text="@string/button_openspace"
+        android:textColor="#ffff"
+        android:textSize="12sp">
+    </Button>
+
+</LinearLayout>

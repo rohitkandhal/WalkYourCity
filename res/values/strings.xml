@@ -9,4 +9,8 @@
     <string name="title_activity_custom_list">CustomList</string>
     <string name="title_activity_home">Walk North Hill</string>
     <string name="header_text">Walk North Hill</string>
+    <string name="button_amusement">AMUSEMENT</string>
+    <string name="button_landmarks">LANDMARKS</string>
+    <string name="button_commerce">COMMERCE </string>
+    <string name="button_openspace">OPEN SPACE</string>
 </resources>
