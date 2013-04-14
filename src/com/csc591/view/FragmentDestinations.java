@@ -1,13 +1,27 @@
 package com.csc591.view;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.w3c.dom.Document;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,7 +34,10 @@ import android.widget.PopupWindow;
 
 import com.csc591.DAL.Destination;
 import com.csc591.DAL.DestinationDataSource;
+import com.csc591.utils.GMapDirectionHelper;
 import com.csc591.view.Home.OnFooterCategorySelectionChanged;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class FragmentDestinations extends Fragment implements OnFooterCategorySelectionChanged{
 
@@ -45,35 +62,6 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		return view;
 	}
 	
-	
-	
-	private void showPopup(View view)
-	{
-	// Creating the PopupWindow
-	final PopupWindow popup = new PopupWindow();
-	popup.setWidth(30);
-	popup.setHeight(30);
-	
-	// Some offset to align the popup a bit to the right, and a bit down, relative to button's position.
-	int OFFSET_X = 30;
-	int OFFSET_Y = 30;
-	popup.showAtLocation(view, Gravity.NO_GRAVITY, OFFSET_X,OFFSET_Y);
-	}
-	/*  // Clear the default translucent background
-	   popup.setBackgroundDrawable(new BitmapDrawable());
-	
-	 // Displaying the popup at the specified location, + offsets.
-	   popup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
-	 
-	   // Getting a reference to Close button, and close the popup when clicked.
-	   Button close = (Button) layout.findViewById(R.id.close);
-	   close.setOnClickListener(new OnClickListener() {
-	 
-	     @Override
-	     public void onClick(View v) {
-	       popup.dismiss();
-	     }
-	   });*/
 
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
@@ -90,8 +78,6 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 	    	 onListViewItemClick(position);
-	        // showPopup(view);
-	    	   //  Toast.makeText(ListRecords.this,"Clicked!", Toast.LENGTH_LONG).show();
 	       }
 	   });
 		
