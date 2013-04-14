@@ -88,6 +88,10 @@ public class DestinationDataSource {
 	
 	public void CreateNewHARDCODEDDataBase()
 	{
+		
+		String q = "DELETE FROM destinations ";
+		database.execSQL(q);
+		
 		Destination dest = new Destination(1, 35.83631354286433, -78.64284843206406, "Target (Underground)", 0, "Dummy", 0);
 		
 		this.createPlace(dest);
