@@ -106,15 +106,15 @@ public class DestinationListAdapter extends ArrayAdapter<Destination> {
 		switch(type)
 		{
 		case 0:
-			//return R.drawable.blue;
-			return R.drawable.list_blue;
+			
+			return R.drawable.list_orange;
 			
 		case 1:
 			//return R.drawable.sky;
 			return R.drawable.list_sky;
 			
 		case 2:
-			return R.drawable.list_orange;
+			return R.drawable.list_blue;
 			//return R.drawable.orange;
 			
 		case 3:
@@ -131,13 +131,13 @@ public class DestinationListAdapter extends ArrayAdapter<Destination> {
 		switch(color)
 		{
 		case 0:
-			return this.hdl.getResources().getColor(R.color.blue);
+			return this.hdl.getResources().getColor(R.color.orange);
 			
 		case 1:
 			return this.hdl.getResources().getColor(R.color.sky);
 
 		case 2:
-			return this.hdl.getResources().getColor(R.color.orange);
+			return this.hdl.getResources().getColor(R.color.blue);
 			
 		case 3:
 			return this.hdl.getResources().getColor(R.color.green);
