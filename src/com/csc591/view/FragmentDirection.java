@@ -1,15 +1,21 @@
 package com.csc591.view;
 
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.w3c.dom.Document;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,18 +26,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Window;
-import android.widget.Toast;
 
 import com.csc591.DAL.Destination;
-import com.csc591.utils.JSONParser;
-import com.csc591.utils.PathHelper;
+import com.csc591.utils.GMapDirectionHelper;
 import com.csc591.view.MyLocationListener.onMyLocationChangeHandler;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 // NOTE: IMP - Ideally this class should be a fragment instead of activity but 
@@ -83,10 +86,10 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, 15));
 		// Provide default zoom level (i.e. how much map area to bring in focus)
-		map.animateCamera(CameraUpdateFactory.zoomTo(17), 300, null);
+		map.animateCamera(CameraUpdateFactory.zoomTo(15), 300, null);
 		
-		
-		//drawWalkRoute(dummyLatLng, destinationLatLng);
+		// Call google api for getting direction between source and direction
+		new GetDirectionTaskNew().execute(sourceLatLng, destinationLatLng);
 	}
 	
 	public void onResume()
@@ -162,7 +165,6 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 	}
 	
 	/*
-	 * (non-Javadoc)
 	 * @see com.csc591.view.MyLocationListener.onMyLocationChangeHandler#onMyLocationChanged(android.location.Location)
 	 * On location change update the 
 	 */
@@ -226,6 +228,70 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 	{
 		// TODO - add code here to check when user returns from enable GPS screen to our app
 		// then is GPS enabled or not
+	}
+	
+	// Get data from Google Direction Api and display on existing map
+	private void onBackgroundTaskDataObtained(PolylineOptions mapRectLines)
+	{
+		map.addPolyline(mapRectLines);
+	}
+	
+	// ********************************* Calling Google Map Direction API for route directions ***********
+	
+	public class GetDirectionTaskNew extends AsyncTask<LatLng, Void, Document> {
+		
+		private Exception exception;
+
+		// Please note walking directions are hard coded, in case you need 
+		// driving direction (in future) then change mode to walking
+		protected Document doInBackground(LatLng... latlng) {
+			String url = "http://maps.googleapis.com/maps/api/directions/xml?" 
+	        		+ "origin=" + latlng[0].latitude + "," + latlng[0].longitude  
+	        		+ "&destination=" + latlng[1].latitude + "," + latlng[1].longitude 
+	        		+ "&sensor=false&units=metric&mode=walking";
+			
+	        try {
+	            HttpClient httpClient = new DefaultHttpClient();
+	            HttpContext localContext = new BasicHttpContext();
+	            HttpPost httpPost = new HttpPost(url);
+	            HttpResponse response = httpClient.execute(httpPost, localContext);
+	            InputStream in = response.getEntity().getContent();
+	            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+	            Document doc = builder.parse(in);
+	            return doc;
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+			return null;
+			
+		}
+		
+		protected void onPostExecute(Document doc) {
+	        // TODO: check this.exception 
+			parseGoogleMapDirectionDocument(doc);
+	    }
+		
+		/*
+		 * Parse the google json result and get the required data.
+		 * Also pass the required data to Fragment Direction (using onBackground TaskData Obtained method).
+		 * Then that method will draw route on map
+		 */
+		public void parseGoogleMapDirectionDocument(Document doc)
+		{
+			GMapDirectionHelper gDirection = new GMapDirectionHelper();
+			int duration = gDirection.getDurationValue(doc);
+			String distance = gDirection.getDistanceText(doc);
+			String start_address = gDirection.getStartAddress(doc);
+			String copy_right = gDirection.getCopyRights(doc);
+
+			ArrayList<LatLng> directionPoint = gDirection.getDirection(doc);
+			PolylineOptions rectLine = new PolylineOptions().width(4).color(Color.RED);
+			
+			for(int i = 0 ; i < directionPoint.size() ; i++) {			
+				rectLine.add(directionPoint.get(i));
+			}
+			FragmentDirection.this.onBackgroundTaskDataObtained(rectLine);
+		}
 	}
 
 	
