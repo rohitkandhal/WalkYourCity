@@ -107,6 +107,33 @@ public class DestinationDataSource {
 		Destination dest3 = new Destination(4, 35.83748101280661, -78.64376306533813, "JCPenney", 3, "Dummy", 0 );
 		
 		this.createPlace(dest3);
+		
+		Destination dest4 = new Destination(5,35.83760713,-78.64222348,"REI",0,"Dummy",0);
+		
+		this.createPlace(dest4);
+		
+		Destination dest5 = new Destination(6,	35.83992502,-78.64247024,"6Forks Bus Stop",1,"some description",0);
+		
+		this.createPlace(dest5);
+		
+		Destination dest6 = new Destination(7,	35.83736794,-78.64178896,"Central Bus Stop",3,"some description",0);
+		
+		this.createPlace(dest6);
+		
+		Destination dest7 = new Destination(8,	35.83728966,-78.64024401,"CapTrust Tower",2,"some description",0);
+		
+		this.createPlace(dest7);
+	
+		Destination dest8 = new Destination(9,	35.83757016,-78.63985777,"Bowling",0,"some description",0);
+		
+		this.createPlace(dest8);
+		
+		Destination dest9 = new Destination(10,35.83688305,-78.64260972,"North Hills Commons",3,"some description",0);
+		
+		this.createPlace(dest6);
+		
+		
+	
 	}
 	
 	private Destination cursorToDestination(Cursor cursor)
