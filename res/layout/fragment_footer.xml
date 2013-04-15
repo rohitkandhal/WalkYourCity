@@ -2,18 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    style="?android:attr/buttonBarStyle" >
+    android:orientation="horizontal">
     
-    <Button
+    <!-- <Button
         android:id="@+id/amusement_button"
         style="?android:attr/buttonBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1.0"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:background="@drawable/amusement"
+        android:background="@color/orange"
         android:text="@string/button_amusement"
         android:textColor="#ffff"
         android:textSize="12sp">
@@ -27,8 +25,7 @@
         android:layout_marginLeft="0dp" 
         android:layout_weight="1.0"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:background="@drawable/landmarks"
+        android:background="@color/sky"
         android:text="@string/button_landmarks"
         android:textColor="#ffff"
         android:textSize="12sp">
@@ -42,8 +39,7 @@
         android:layout_marginLeft="0dp"
         android:layout_weight="1.0"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:background="@drawable/commerce"
+        android:background="@color/blue"
         android:text="@string/button_commerce"
         android:textColor="#ffff"
         android:textSize="12sp">
@@ -57,11 +53,58 @@
         android:layout_marginLeft="0dp"
         android:layout_weight="1.0"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:background="@drawable/open_space"
+        android:background="@color/green"
         android:text="@string/button_openspace"
         android:textColor="#ffff"
         android:textSize="12sp">
+    </Button>-->
+    
+    <Button 
+        android:text="@string/button_amusement" 
+        android:id="@+id/amusement_button" 
+        android:background="@drawable/orange_button" 
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="0dp"
+        android:layout_weight="1.0"
+        android:focusable="true">
+    </Button>
+    
+    <Button 
+        android:text="@string/button_landmarks" 
+        android:id="@+id/landmarks_button" 
+        android:background="@drawable/sky_button" 
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="0dp"
+        android:layout_weight="1.0"
+        android:focusable="true">
+    </Button>
+    
+    <Button 
+        android:text="@string/button_commerce" 
+        android:id="@+id/commerce_button" 
+        android:background="@drawable/blue_button" 
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="0dp"
+        android:layout_weight="1.0"
+        android:focusable="true">
+    </Button>
+    
+    <Button 
+        android:text="@string/button_openspace" 
+        android:id="@+id/openspace_button" 
+        android:background="@drawable/green_button" 
+        style="@style/ButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="0dp"
+        android:layout_weight="1.0"
+        android:focusable="true">
     </Button>
 
 </LinearLayout>
