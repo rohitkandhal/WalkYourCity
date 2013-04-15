@@ -3,7 +3,7 @@
     android:orientation="horizontal" 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="3dp"	>
+    android:padding="2dp"	>
     
     <!--  Placing controls side to side. 2 textview on left, 
     1 imageview for go on right -->
