@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Window;
 
@@ -23,23 +25,50 @@ public class Home extends Activity implements FragmentDestinationInterface, Frag
 		
 		// Uses below to Remove notification bar but not required in our application. Helpful in games
 		//this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+		this.getCurrentDeviceLocation();
 		super.onCreate(savedInstanceState);
+		
+		
 		
 		setContentView(R.layout.activity_home);
 
 		//ViewServer.get(this).addWindow(this);
 	}
 	
+	private LocationManager myLocationManager;
+	private MyLocationListener myLocationListener;
+	
+	public void getCurrentDeviceLocation()
+	{
+		try{
+		this.myLocationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+		this.myLocationListener = new MyLocationListener();
+		this.myLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
+		}
+		catch (Exception e) {
+			// TODO: handle GPS unavailable or Wifi unavailable exception
+		}
+	}
 	public void onDestroy() {
         super.onDestroy();
         //ViewServer.get(this).removeWindow(this);
+        if(this.myLocationListener != null && this.myLocationManager != null)
+    		myLocationManager.removeUpdates(myLocationListener);
    }
 
     public void onResume() {
         super.onResume();
         //ViewServer.get(this).setFocusedWindow(this);
+        if(this.myLocationListener != null && this.myLocationManager != null)
+        	this.myLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
    }
+    
+    public void onPause()
+    {
+    	super.onPause();
+    	if(this.myLocationListener != null && this.myLocationManager != null)
+    		myLocationManager.removeUpdates(myLocationListener);
+    }
 
     
 	@Override

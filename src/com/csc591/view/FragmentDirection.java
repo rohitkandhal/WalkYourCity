@@ -61,10 +61,16 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_directions);
 		
+		try
+		{
 		this.myLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		this.myLocationListener = new MyLocationListener();
 		this.myLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
-		
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			//GPS not enabled exceptions;;
+		}
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.fragmentDirect)).getMap();
 		
 		// Get received destination object
@@ -117,6 +123,12 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 		//myLocationManager.removeUpdates(myLocationListener);
 		isGPSEnabled = false;
 	}
+	
+	public void onDestroy() {
+        super.onDestroy();
+        if(this.myLocationListener != null && this.myLocationManager != null)
+    		myLocationManager.removeUpdates(myLocationListener);
+   }
 		
 	/*
 	 * Add placemarks on map. If destination is null then it is assumed that it is the current source location
@@ -170,7 +182,7 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 	 */
 	@Override
 	public void onMyLocationChanged(Location location) {
-		this.addPlaceMarkerOnMap(new LatLng(location.getLatitude(), location.getLongitude()), null);
+		//this.addPlaceMarkerOnMap(new LatLng(location.getLatitude(), location.getLongitude()), null);
 	}
 
 	

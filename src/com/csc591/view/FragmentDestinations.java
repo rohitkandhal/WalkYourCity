@@ -21,7 +21,10 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -35,8 +38,10 @@ import com.csc591.DAL.Destination;
 import com.csc591.DAL.DestinationDataSource;
 import com.csc591.utils.GoogleDistanceMatrixReader;
 import com.csc591.view.Home.OnFooterCategorySelectionChanged;
+import com.csc591.view.MyLocationListener.onMyLocationChangeHandler;
+import com.google.android.gms.maps.model.LatLng;
 
-public class FragmentDestinations extends Fragment implements OnFooterCategorySelectionChanged{
+public class FragmentDestinations extends Fragment implements OnFooterCategorySelectionChanged, onMyLocationChangeHandler{
 
 	private List<Destination> allDestinations;
 	private List<Destination> selectedDestinations;
@@ -55,6 +60,13 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 			Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		try{// Currently we start GPS in home activity so it won't be required but in case 
+			// support map on home activity then this will be required
+			//this.getCurrentDeviceLocation();
+		}
+		catch (Exception e) {
+			// TODO: handle GPS unavailable exception
+		}
 		View view = inflater.inflate(R.layout.fragment_dest_list,container,false);
 		this.setUpInitialDatabase();
 		return view;
@@ -191,6 +203,61 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		this.destinationListAdapter.notifyDataSetChanged();
 	}
 	
+	public void getCurrentDeviceLocation()
+	{
+		LocationManager locationManager = (LocationManager)this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+		myLocationListener = new MyLocationListener();
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
+	}
+	
+	MyLocationListener myLocationListener; 
+	@Override
+	public void onMyLocationChanged(Location location) {
+		// TODO Auto-generated method stub
+		this.currentLatLng = new LatLng(MyLocationListener.getLat(), MyLocationListener.getLon());
+		
+	}
+	
+	private LatLng currentLatLng;
+	
+	
+	public LatLng getCurrentLatLng() {
+		
+		if(this.currentLatLng == null)
+		{
+			Location lastKnown = this.getLastBestKnownDeviceLocation();
+			this.currentLatLng = new LatLng(lastKnown.getLatitude(), lastKnown.getLongitude());
+			
+		}
+		return currentLatLng;
+	}
+
+
+	public void setCurrentLatLng(LatLng currentLatLng) {
+		this.currentLatLng = currentLatLng;
+	}
+	
+	public Location getLastBestKnownDeviceLocation()
+	{
+		Location locationGPS = ((LocationManager)this.getActivity().getSystemService(Context.LOCATION_SERVICE)).getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		Location locationNet = ((LocationManager)this.getActivity().getSystemService(Context.LOCATION_SERVICE)).getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		
+	    long GPSLocationTime = 0;
+	    if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
+
+	    long NetLocationTime = 0;
+
+	    if (null != locationNet) {
+	        NetLocationTime = locationNet.getTime();
+	    }
+
+	    if ( 0 < GPSLocationTime - NetLocationTime ) {
+	        return locationGPS;
+	    }
+	    return locationNet;
+	}
+
+
 	/*
 	 * This method gets the result from the google Distance Matrix api call and have
 	 * distance and walking time of all destinations present in our project.
@@ -236,9 +303,7 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 			String destinationURL = "";
 			List<Destination> reqdLocations = allLocations[0];
 			
-			// IMPORTANT NOTE: ASSUMING THAT FIRST LATLNG PASSED IS ALWAYS A SOURCE LOCATION
-			//for(int index = 1; index < reqdLocations.size(); index ++)
-			for(int index = 0; index < reqdLocations.size(); index ++)		// TODO - ONLY FOR DEMO
+			for(int index = 0; index < reqdLocations.size(); index ++)
 			{
 				destinationURL += reqdLocations.get(index).getLatitude() +"," + reqdLocations.get(index).getLongitude();
 				if(index+1 != reqdLocations.size())
@@ -256,8 +321,7 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 			
 			// Textile location: 35.770409,-78.678747
 			String url = "http://maps.googleapis.com/maps/api/distancematrix/xml?"
-					+ "origins=" + 35.770409 + "," + -78.678747	// TODO - ONLY FOR DEMO
-	        		//+ "origins=" + reqdLocations.get(0).getLatitude()+ "," + reqdLocations.get(0).getLongitude()  
+					+ "origins=" + getCurrentLatLng().latitude + "," + getCurrentLatLng().longitude
 	        		+ "&destinations=" + destinationURL
 	        		+ "&sensor=false&mode=walking";
 			
@@ -295,4 +359,6 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 			FragmentDestinations.this.onBackgroundTaskDataObtained(duration);
 		}
 	}
+
+	
 }
