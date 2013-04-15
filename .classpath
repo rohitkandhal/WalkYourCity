@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="com/csc591/view/DestinationItemUI.java|com/csc591/view/HeaderDestinationList.java|DAL/|model/|com/csc591/view/DestinationElement.java|com/csc591/utils/DestinationPathOverlay.java|com/csc591/utils/JSONParser.java|com/csc591/utils/PathHelper.java" kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="F:/Study/Mobile/Project/Spring13-WalkRaleigh-Android/libs/google-play-services.jar"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
