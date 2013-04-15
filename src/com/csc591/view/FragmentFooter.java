@@ -122,21 +122,20 @@ public class FragmentFooter extends Fragment implements OnClickListener {
 	    // amusementFlag - 0, landmark - 1, commerce - 2, open space - 3
 	    newFlags.clear();
 	    if(amusementFlag)
-	    {
 	    	newFlags.add(0);
-	    }
+
 	    if(landmarksFlag)
-	    {
 	    	newFlags.add(1);
-	    }
+
 	    if(commerceFlag)
-	    {
 	    	newFlags.add(2);
-	    }
+
 	    if(openspaceFlag)
-	    {
 	    	newFlags.add(3);
-	    }
+	    
+	    if(!amusementFlag && !landmarksFlag && !commerceFlag && !openspaceFlag)
+	    	for(int i=0;i<=3;i++)
+	    		newFlags.add(i);
 	    homeActivityInterface.onCategoryButtonClickHandler(newFlags);
 	 }		
 }
