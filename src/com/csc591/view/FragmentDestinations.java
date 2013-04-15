@@ -237,7 +237,8 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 			List<Destination> reqdLocations = allLocations[0];
 			
 			// IMPORTANT NOTE: ASSUMING THAT FIRST LATLNG PASSED IS ALWAYS A SOURCE LOCATION
-			for(int index = 1; index < reqdLocations.size(); index ++)
+			//for(int index = 1; index < reqdLocations.size(); index ++)
+			for(int index = 0; index < reqdLocations.size(); index ++)		// TODO - ONLY FOR DEMO
 			{
 				destinationURL += reqdLocations.get(index).getLatitude() +"," + reqdLocations.get(index).getLongitude();
 				if(index+1 != reqdLocations.size())
@@ -253,8 +254,10 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 				// See more details at http://goo.gl/f6GFq
 			}
 			
-			String url = "http://maps.googleapis.com/maps/api/distancematrix/xml?" 
-	        		+ "origins=" + reqdLocations.get(0).getLatitude()+ "," + reqdLocations.get(0).getLongitude()  
+			// Textile location: 35.770409,-78.678747
+			String url = "http://maps.googleapis.com/maps/api/distancematrix/xml?"
+					+ "origins=" + 35.770409 + "," + -78.678747	// TODO - ONLY FOR DEMO
+	        		//+ "origins=" + reqdLocations.get(0).getLatitude()+ "," + reqdLocations.get(0).getLongitude()  
 	        		+ "&destinations=" + destinationURL
 	        		+ "&sensor=false&mode=walking";
 			
