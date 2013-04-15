@@ -92,11 +92,11 @@ public class DestinationDataSource {
 		String q = "DELETE FROM destinations ";
 		database.execSQL(q);
 		
-		Destination dest = new Destination(1, 35.83631354286433, -78.64284843206406, "Target (Underground)", 0, "Dummy", 0);
+		Destination dest = new Destination(1, 35.76652,-78.697278, "Food Lion", 3, "Dummy", 0);
 		
 		this.createPlace(dest);
 		
-		Destination dest1 = new Destination(	2, 35.837289663981274, -78.6402440071106, "CapTrust Tower", 1, "Dummy", 0);
+		Destination dest1 = new Destination(2, 35.788507,-78.665457, "D.H. Hill", 1, "Dummy", 0);
 		
 		this.createPlace(dest1);
 		
