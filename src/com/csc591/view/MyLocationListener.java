@@ -46,7 +46,7 @@ public class MyLocationListener implements LocationListener
         altitude = location.getAltitude();
         speed = location.getSpeed(); 
         
-        parentActivity.onMyLocationChanged(location);
+      //  parentActivity.onMyLocationChanged(location);
     }
 
     @Override

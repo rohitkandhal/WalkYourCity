@@ -53,6 +53,15 @@ public class Destination implements Serializable{
 		this.favorite = favorite;
 	}
 	
+	public int getWalkingTime()
+	{
+		return walkingTime;
+	}
+	public void setWalkingTime(int walkingTime)
+	{
+		this.walkingTime = walkingTime;
+	}
+	
 	private long id;
 	private double latitude;
 	private double longitude;
@@ -60,6 +69,8 @@ public class Destination implements Serializable{
 	private int type;
 	private String description;
 	private int favorite;
+	private int walkingTime = 0;	// This field is populated in UI using Google Distance Matrix Api
+								// Don't hard code anything into it
 	
 
 	public Destination()

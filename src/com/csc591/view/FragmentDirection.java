@@ -33,6 +33,7 @@ import com.csc591.view.MyLocationListener.onMyLocationChangeHandler;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -66,7 +67,6 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 		
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.fragmentDirect)).getMap();
 		
-		
 		// Get received destination object
 		Intent receivedIntent = getIntent();
 		Destination receivedDestination = (Destination)receivedIntent.getSerializableExtra("DestinationObject");
@@ -75,6 +75,9 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 		
 		this.sourceLatLng = new LatLng(getCurrentLocation().getLatitude(), getCurrentLocation().getLongitude());
 		
+		// Call google api for getting direction between source and direction
+		new GetDirectionTask().execute(sourceLatLng, destinationLatLng);
+				
 		// Get current location either from GPS or Network Provider
 		this.addPlaceMarkerOnMap(sourceLatLng, null);
 				
@@ -82,14 +85,11 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 		this.addPlaceMarkerOnMap(destinationLatLng, receivedDestination);
 
 		// Following marker type should be used in case of custom marker
-		//Marker kiel = map.addMarker(new MarkerOptions().position(destinationLatLng).title(receivedDestination.getName()).snippet(receivedDestination.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.drawable.wyc_green)));
+		//map.addMarker(new MarkerOptions().position(destinationLatLng).title(receivedDestination.getName()).snippet(receivedDestination.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.drawable.placemark)));
 
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, 15));
 		// Provide default zoom level (i.e. how much map area to bring in focus)
 		map.animateCamera(CameraUpdateFactory.zoomTo(15), 300, null);
-		
-		// Call google api for getting direction between source and direction
-		new GetDirectionTaskNew().execute(sourceLatLng, destinationLatLng);
 	}
 	
 	public void onResume()
@@ -144,7 +144,7 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 		map.addMarker(new MarkerOptions().position(locationLatLng).title(destinationName).snippet(destinationDescription));
 	}
 	
-	private Location getCurrentLocation()
+	public Location getCurrentLocation()
 	{
 		Location locationGPS = this.myLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		Location locationNet = this.myLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -238,7 +238,7 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 	
 	// ********************************* Calling Google Map Direction API for route directions ***********
 	
-	public class GetDirectionTaskNew extends AsyncTask<LatLng, Void, Document> {
+	public class GetDirectionTask extends AsyncTask<LatLng, Void, Document> {
 		
 		private Exception exception;
 
@@ -272,7 +272,7 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 	    }
 		
 		/*
-		 * Parse the google json result and get the required data.
+		 * Parse the google XML result and get the required data.
 		 * Also pass the required data to Fragment Direction (using onBackground TaskData Obtained method).
 		 * Then that method will draw route on map
 		 */

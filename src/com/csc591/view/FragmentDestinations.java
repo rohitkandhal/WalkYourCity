@@ -1,6 +1,8 @@
 package com.csc591.view;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,24 +22,19 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 
 import com.csc591.DAL.Destination;
 import com.csc591.DAL.DestinationDataSource;
-import com.csc591.utils.GMapDirectionHelper;
+import com.csc591.utils.GoogleDistanceMatrixReader;
 import com.csc591.view.Home.OnFooterCategorySelectionChanged;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 public class FragmentDestinations extends Fragment implements OnFooterCategorySelectionChanged{
 
@@ -59,6 +56,7 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	{
 		super.onCreate(savedInstanceState);
 		View view = inflater.inflate(R.layout.fragment_dest_list,container,false);
+		this.setUpInitialDatabase();
 		return view;
 	}
 	
@@ -66,20 +64,6 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		
-		this.setUpInitialDatabase();
-		
-		this.setUpDestinationList();
-		ListView lv = (ListView)this.getView().findViewById(R.id.listViewDestinations);
-		//lv.setClickable(true);
-
-		lv.setOnItemClickListener(new OnItemClickListener() {
-
-	       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-	    	 onListViewItemClick(position);
-	       }
-	   });
 		
 	}
 	
@@ -158,7 +142,15 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		}
 		
 		allDestinations = dataSource.getAllDestinations();
-		this.selectedDestinations = dataSource.getAllDestinations();;
+		this.selectedDestinations = dataSource.getAllDestinations();
+		
+		ArrayList<Destination> forGoogleApi = new ArrayList<Destination>();
+		//Destination dest8 = new Destination(0,,"Bowling",0,"some description",0);
+		
+		Destination dummySourceDest = new Destination();
+		//forGoogleApi.add()
+		new GetDistanceMatrixTask().execute(this.allDestinations);
+		//new GetDistanceMatrixTask().execute(new LatLng(35.777418,-78.677666), new LatLng(35.78036,-78.67816), new LatLng(35.787515,-78.670456));
 	}
 	
 	private void setUpDestinationList()
@@ -197,5 +189,107 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		}
 		
 		this.destinationListAdapter.notifyDataSetChanged();
+	}
+	
+	/*
+	 * This method gets the result from the google Distance Matrix api call and have
+	 * distance and walking time of all destinations present in our project.
+	 * Update the local copy of destination collection's walking time object with the time received
+	 * and show on UI.
+	 */
+	private void onBackgroundTaskDataObtained(ArrayList<Integer> walkingTimes)
+	{
+		this.setUpDestinationList();
+		
+		// copy Walking times to destination objects
+		for(int index = 0; index < walkingTimes.size(); index++)
+		{
+			this.selectedDestinations.get(index).setWalkingTime(walkingTimes.get(index));
+			this.allDestinations.get(index).setWalkingTime(walkingTimes.get(index));
+		}		
+		
+		ListView lv = (ListView)this.getView().findViewById(R.id.listViewDestinations);
+
+		lv.setOnItemClickListener(new OnItemClickListener() {
+
+	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+	    	 onListViewItemClick(position);
+	       }
+	   });
+		
+	}
+	
+	// **************************************************************************************
+				// 	 GOOGLE DISTANCE MATRIX api 
+				// for calculating distance and walking time between two points
+	// **************************************************************************************
+	
+	public class GetDistanceMatrixTask extends AsyncTask<List<Destination>, Void, Document> {
+		
+		private Exception exception;
+
+		// Please note walking directions are hard coded, in case you need 
+		// driving direction (in future) then change mode to walking
+		protected Document doInBackground(List<Destination>... allLocations) {
+			
+			String destinationURL = "";
+			List<Destination> reqdLocations = allLocations[0];
+			
+			// IMPORTANT NOTE: ASSUMING THAT FIRST LATLNG PASSED IS ALWAYS A SOURCE LOCATION
+			for(int index = 1; index < reqdLocations.size(); index ++)
+			{
+				destinationURL += reqdLocations.get(index).getLatitude() +"," + reqdLocations.get(index).getLongitude();
+				if(index+1 != reqdLocations.size())
+				{
+					try {
+						destinationURL+=  URLEncoder.encode("|", "UTF-8");
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				// IMP to use URLEncoder here
+				// See more details at http://goo.gl/f6GFq
+			}
+			
+			String url = "http://maps.googleapis.com/maps/api/distancematrix/xml?" 
+	        		+ "origins=" + reqdLocations.get(0).getLatitude()+ "," + reqdLocations.get(0).getLongitude()  
+	        		+ "&destinations=" + destinationURL
+	        		+ "&sensor=false&mode=walking";
+			
+	        try {
+	            HttpClient httpClient = new DefaultHttpClient();
+	            HttpContext localContext = new BasicHttpContext();
+	            HttpPost httpPost = new HttpPost(url);
+	            HttpResponse response = httpClient.execute(httpPost, localContext);
+	            InputStream in = response.getEntity().getContent();
+	            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+	            Document doc = builder.parse(in);
+	            return doc;
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+			return null;
+			
+		}
+		
+		protected void onPostExecute(Document doc) {
+	        // Parse the result obtained from api call 
+			parseGoogleDistanceMatrix(doc);
+	    }
+		
+		/*
+		 * Parse the google XML result and get the required data.
+		 * Also pass the required data to Fragment Direction (using onBackground TaskData Obtained method).
+		 * Then that method will draw route on map
+		 */
+		public void parseGoogleDistanceMatrix(Document doc)
+		{
+			GoogleDistanceMatrixReader gDistMatrix = new GoogleDistanceMatrixReader();
+			ArrayList<Integer> duration = gDistMatrix.getDurationValue(doc);
+
+			FragmentDestinations.this.onBackgroundTaskDataObtained(duration);
+		}
 	}
 }
