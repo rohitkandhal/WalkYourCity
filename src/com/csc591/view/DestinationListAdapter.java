@@ -64,9 +64,19 @@ public class DestinationListAdapter extends ArrayAdapter<Destination> {
 		Destination destination = data.get(postion);
 		placeData.txtName.setText(destination.getName().toUpperCase());
 		placeData.imgIcon.setImageResource(getIcon(destination.getType()));
-		placeData.txtTime.setText("in "+ destination.getWalkingTime()/60 +" minutes");	// Google api returns time in seconds
+		placeData.txtTime.setText(getTextForTime(destination));	// Google api returns time in seconds
 		listItem.setBackgroundColor(getColorCode(destination.getType()));
 		return listItem;
+	}
+	
+	public String getTextForTime(Destination destination)
+	{
+		// If time is less than a minutes
+		if(destination.getWalkingTime()/60 == 0)
+		{
+			return "You are here!!";
+		}
+		return "in " + destination.getWalkingTime()/60 +" minutes";
 	}
 	
 	public int getIcon(int type)
