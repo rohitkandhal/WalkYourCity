@@ -95,7 +95,7 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, 15));
 		// Provide default zoom level (i.e. how much map area to bring in focus)
-		map.animateCamera(CameraUpdateFactory.zoomTo(15), 300, null);
+	//	map.animateCamera(CameraUpdateFactory.zoomTo(15), 300, null);
 	}
 	
 	public void onResume()

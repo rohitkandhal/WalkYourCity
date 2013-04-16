@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
     
-     <TextView android:id="@+id/txtHeader1"
-        android:layout_width="match_parent"
+       <fragment 
+        android:id="@+id/fragmentHeader"
+        android:layout_width="match_parent"        
         android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:textStyle="bold"
-        android:textSize="22sp"
-        android:textColor="#FFFFFF"
-        android:padding="10dp"
-        android:text="@string/header_text"
-        android:background="#336699" />
-       
+        class="com.csc591.view.FragmentHeader"/>
+     
        <fragment 
         android:id="@+id/fragmentDirect"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         class="com.google.android.gms.maps.MapFragment"/>
 
-</RelativeLayout>
+</LinearLayout>
