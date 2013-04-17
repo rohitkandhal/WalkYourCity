@@ -1,6 +1,8 @@
 package com.csc591.view;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -9,24 +11,32 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,6 +162,10 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		{
 			dataSource.CreateNewHARDCODEDDataBase();
 		}
+		
+		// This call is for retrieving data from the server dynamically.
+		// For the time being we are using hard coded database. until we are using splash screen.
+		//new RetrieveData(getActivity().getApplicationContext()).execute();
 		
 		allDestinations = dataSource.getAllDestinations();
 		this.selectedDestinations = dataSource.getAllDestinations();
@@ -358,6 +372,101 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 
 			FragmentDestinations.this.onBackgroundTaskDataObtained(duration);
 		}
+	}
+	
+	
+	// ***************************************************************************************
+				// Getting list dynamically from server
+	// ***************************************************************************************
+	
+
+	public class RetrieveData extends AsyncTask {
+
+		Context context;
+	    ProgressDialog waitSpinner;
+	    //ConfigurationContainer configuration = ConfigurationContainer.getInstance();
+	    
+	    public RetrieveData(Context context) {
+	        this.context = context;
+	        waitSpinner = new ProgressDialog(this.context);
+	    }
+	    
+	    protected Object doInBackground(Object... args) {
+
+
+	    /*	try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}*/
+	    	
+			String mysqlIP = "152.46.16.201";
+			ArrayList<String> data = new ArrayList<String>();
+			String result = "";
+			//the year data to send
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair("",""));
+			 
+			InputStream is = null;
+			try{
+			        HttpClient httpclient = new DefaultHttpClient();
+			        HttpPost httppost = new HttpPost("http://"+mysqlIP+"/getDestinationsList.php");
+			       // httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			        HttpResponse response = httpclient.execute(httppost);
+			        HttpEntity entity = response.getEntity();
+			        is = entity.getContent();
+			}catch(Exception e){
+			        Log.e("log_tag", "Error in http connection "+e.toString());
+			}
+			//convert response to string
+			try{
+			        BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+			        StringBuilder sb = new StringBuilder();
+			        String line = null;
+			        while ((line = reader.readLine()) != null) {
+			                sb.append(line + "\n");
+			        }
+			        is.close();
+			 
+			        result=sb.toString();
+			}catch(Exception e){
+			        Log.e("log_tag", "Error converting result "+e.toString());
+			}
+			 
+			//parse json data
+			try{
+					dataSource.open();
+					dataSource.clearDB();
+					
+			        JSONArray jArray = new JSONArray(result);
+			        for(int i=0;i<jArray.length();i++){
+			                JSONObject json_data = jArray.getJSONObject(i);
+			        		
+			        		//if(!dataSource.checkDataBase())
+			                Destination dest = new Destination(json_data.getInt("id"), json_data.getDouble("lats"), json_data.getDouble("longs"), json_data.getString("name"), json_data.getInt("type"), json_data.getString("description"), json_data.getInt("favourite"));
+			        		
+			        		dataSource.createPlace(dest);
+			                
+			        }
+			}catch(JSONException e){
+			        Log.e("log_tag", "Error parsing data "+e.toString());
+			}
+
+			
+			return null;
+		}
+	    
+	    protected void onProgressUpdate(Object... values) {
+	        super.onProgressUpdate(values);
+	        // Only purpose of this method is to show our wait spinner, we dont
+	        // (and can't) show detailed progress updates
+	    }
+	    
+		protected void onPostExecute(Object result) {
+	        super.onPostExecute(result);
+	    }
+		
 	}
 
 	

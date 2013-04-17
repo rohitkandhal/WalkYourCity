@@ -86,6 +86,11 @@ public class DestinationDataSource {
 		return newComment;
 	}
 	
+	public void clearDB()
+	{
+		database.execSQL("delete from destinations;");
+	}
+	
 	public void CreateNewHARDCODEDDataBase()
 	{
 		
