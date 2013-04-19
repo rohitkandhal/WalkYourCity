@@ -7,11 +7,12 @@
     <TextView android:id="@+id/txtHeader1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:gravity="center_vertical"
+        android:gravity="center_horizontal|center_vertical"
         android:textStyle="bold"
-        android:textSize="22sp"
+        android:textSize="23sp"
         android:textColor="#FFFFFF"
         android:padding="10dp"
+        android:textAlignment="center"
         android:text="@string/header_text"
         android:background="#336699" />
 
