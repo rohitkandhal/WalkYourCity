@@ -5,7 +5,7 @@
     android:orientation="vertical"
 	android:background="#FFFFFF" >   
     
-      <ListView 
+        <ListView 
         android:id="@+id/listViewDestinations"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -14,8 +14,11 @@
         android:textSize="22sp"
         android:textColor="#FFFFFF"
         android:padding="2dp"
+        android:divider="#FFFFFF"
+        android:dividerHeight="14.5sp"
         android:background="#FFFFFF" >
         
-          </ListView>
+        </ListView>
+          
     
 </LinearLayout>

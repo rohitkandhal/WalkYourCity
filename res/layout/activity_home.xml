@@ -12,6 +12,11 @@
         android:layout_height="50dp"
         class="com.csc591.view.FragmentHeader"/>
      
+      <View
+  		android:layout_width="1dp"
+  		android:layout_height="10dp">
+		</View>
+     
       <fragment
         android:id="@+id/fragmentDestinations"
         android:layout_width="match_parent"
@@ -19,12 +24,17 @@
         android:layout_weight="0.4"
         class="com.csc591.view.FragmentDestinations"/>
     
+      <View
+  		android:layout_width="1dp"
+  		android:layout_height="15dp">
+		</View>
       <fragment
         android:id="@+id/fragmentFooter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.6"
+        android:layout_weight="1.3"
         class="com.csc591.view.FragmentFooter"/>
+      
       
      
 </LinearLayout>
