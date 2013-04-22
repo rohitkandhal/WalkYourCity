@@ -17,5 +17,5 @@ of miles.
 2. _Filtering destinations based on selected category_  
 	![Alt text](/screenshot/btnpressed.png "Category Selected")
 
-3. _Direction to selected destination_
-	![Alt text](/screenshot/direction.png "Directions")
+3. _Direction to selected destination_   
+![Alt text](/screenshot/direction.png "Directions")
