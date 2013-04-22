@@ -15,4 +15,7 @@ of miles.
     ![Alt text](/screenshot/home.png "Home Screen")
 
 2. _Filtering destinations based on selected category_  
-![Alt text](/screenshot/btnpressed.png "Category Selected")
+	![Alt text](/screenshot/btnpressed.png "Category Selected")
+
+3. _Direction to selected destination_
+	![Alt text](/screenshot/direction.png "Directions")
