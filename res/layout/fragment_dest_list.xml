@@ -15,7 +15,7 @@
         android:textColor="#FFFFFF"
         android:padding="2dp"
         android:divider="#FFFFFF"
-        android:dividerHeight="14.5sp"
+        android:dividerHeight="8sp"
         android:background="#FFFFFF" >
         
         </ListView>
