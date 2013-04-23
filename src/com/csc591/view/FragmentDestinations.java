@@ -107,7 +107,8 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	
 	public void onListViewItemClick(int position)
 	{
-		homeActivityInterface.onListItemClickHandler(allDestinations.get(position));
+		// Bug - selected destination list have the currently displayed list item not all destination
+		homeActivityInterface.onListItemClickHandler(selectedDestinations.get(position));
 	}
 	
 	public void onListViewItemHandle(int position)
@@ -142,7 +143,7 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 			//fragment.setArguments(b);
 		
 			// Adding the fragment to the fragment transaction */
-		//	fragmentTransaction.add(R.id.fragmentDirection, fragment,"in.wptrafficanalyzer.country.details");
+			//	fragmentTransaction.add(R.id.fragmentDirection, fragment,"in.wptrafficanalyzer.country.details");
 
 			// Adding this transaction to backstack */
 			fragmentTransaction.addToBackStack(null);
@@ -157,11 +158,8 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	{
 		dataSource = new DestinationDataSource(this.getActivity());
 		dataSource.open();
-		
-		//if(!dataSource.checkDataBase())
-		{
-			dataSource.CreateNewHARDCODEDDataBase();
-		}
+				
+		dataSource.CreateNewHARDCODEDDataBase();
 		
 		// This call is for retrieving data from the server dynamically.
 		// For the time being we are using hard coded database. until we are using splash screen.
@@ -169,14 +167,8 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		
 		allDestinations = dataSource.getAllDestinations();
 		this.selectedDestinations = dataSource.getAllDestinations();
-		
-		ArrayList<Destination> forGoogleApi = new ArrayList<Destination>();
-		//Destination dest8 = new Destination(0,,"Bowling",0,"some description",0);
-		
-		Destination dummySourceDest = new Destination();
-		//forGoogleApi.add()
+				
 		new GetDistanceMatrixTask().execute(this.allDestinations);
-		//new GetDistanceMatrixTask().execute(new LatLng(35.777418,-78.677666), new LatLng(35.78036,-78.67816), new LatLng(35.787515,-78.670456));
 	}
 	
 	private void setUpDestinationList()

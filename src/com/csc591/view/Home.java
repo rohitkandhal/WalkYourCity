@@ -19,7 +19,6 @@ public class Home extends Activity implements FragmentDestinationInterface, Frag
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		// Removes title Bar
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
@@ -27,8 +26,6 @@ public class Home extends Activity implements FragmentDestinationInterface, Frag
 		//this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.getCurrentDeviceLocation();
 		super.onCreate(savedInstanceState);
-		
-		
 		
 		setContentView(R.layout.activity_home);
 
@@ -41,14 +38,15 @@ public class Home extends Activity implements FragmentDestinationInterface, Frag
 	public void getCurrentDeviceLocation()
 	{
 		try{
-		this.myLocationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-		this.myLocationListener = new MyLocationListener();
-		this.myLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
+			this.myLocationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+			this.myLocationListener = new MyLocationListener();
+			this.myLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
 		}
 		catch (Exception e) {
 			// TODO: handle GPS unavailable or Wifi unavailable exception
 		}
 	}
+	
 	public void onDestroy() {
         super.onDestroy();
         //ViewServer.get(this).removeWindow(this);
@@ -79,7 +77,7 @@ public class Home extends Activity implements FragmentDestinationInterface, Frag
 		Home.this.startActivity(myIntent);
 	}
 	
-	public void onListItemClickHandler_OLD_NOT_WORKING(String text) {
+	//public void onListItemClickHandler_OLD_NOT_WORKING(String text) {
 		
 		/** Getting the fragment transaction object, which can be used to add, remove or replace a fragment */
 		//FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -121,7 +119,7 @@ public class Home extends Activity implements FragmentDestinationInterface, Frag
 			// Making this transaction in effect */
 			//fragmentTransaction.commit();
 		        
-		}
+	//	}
 		
 	public interface OnFooterCategorySelectionChanged{
 		public void onCategoryChangeHandler(ArrayList<Integer> newFlags);
