@@ -49,6 +49,9 @@ import com.csc591.DAL.DestinationDataSource;
 import com.csc591.utils.GoogleDistanceMatrixReader;
 import com.csc591.view.Home.OnFooterCategorySelectionChanged;
 import com.csc591.view.MyLocationListener.onMyLocationChangeHandler;
+
+
+
 import com.google.android.gms.maps.model.LatLng;
 
 public class FragmentDestinations extends Fragment implements OnFooterCategorySelectionChanged, onMyLocationChangeHandler{
@@ -58,13 +61,13 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	DestinationListAdapter destinationListAdapter;
 	
 	private DestinationDataSource dataSource;
-	
+
 	public interface FragmentDestinationInterface{
 		public void onListItemClickHandler(Destination destination);
 	}
 	
 	public FragmentDestinationInterface homeActivityInterface;
-	
+	public ProgressDialog progress;
 	public View onCreateView(LayoutInflater inflater,
 			ViewGroup container,
 			Bundle savedInstanceState)
@@ -77,8 +80,16 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		catch (Exception e) {
 			// TODO: handle GPS unavailable exception
 		}
+		
+		/* Sets the splash screen in motion ...waits till the point where the database in completely loaded into the memory */
+		
+		progress = ProgressDialog.show(this.getActivity(),"Loading...","Loading application View, please wait...", false, false);
+		//progress = new ProgressDialog(this.getActivity(), ProgressDialog.STYLE_SPINNER);
+		//progress.setMessage("Loading...");
+		progress.show();
 		View view = inflater.inflate(R.layout.fragment_dest_list,container,false);
 		this.setUpInitialDatabase();
+
 		return view;
 	}
 	
@@ -159,15 +170,14 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		dataSource = new DestinationDataSource(this.getActivity());
 		dataSource.open();
 				
-		dataSource.CreateNewHARDCODEDDataBase();
+		//dataSource.CreateNewHARDCODEDDataBase();
 		
 		// This call is for retrieving data from the server dynamically.
 		// For the time being we are using hard coded database. until we are using splash screen.
-		//new RetrieveData(getActivity().getApplicationContext()).execute();
+		new RetrieveData(getActivity().getApplicationContext()).execute();
 		
 		allDestinations = dataSource.getAllDestinations();
 		this.selectedDestinations = dataSource.getAllDestinations();
-				
 		new GetDistanceMatrixTask().execute(this.allDestinations);
 	}
 	
@@ -375,12 +385,12 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	public class RetrieveData extends AsyncTask {
 
 		Context context;
-	    ProgressDialog waitSpinner;
+	    ProgressDialog progressDialog;
 	    //ConfigurationContainer configuration = ConfigurationContainer.getInstance();
 	    
 	    public RetrieveData(Context context) {
-	        this.context = context;
-	        waitSpinner = new ProgressDialog(this.context);
+	        //this.context = context;
+	        //waitSpinner = new ProgressDialog(this.context);
 	    }
 	    
 	    protected Object doInBackground(Object... args) {
@@ -393,7 +403,7 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 				e1.printStackTrace();
 			}*/
 	    	
-			String mysqlIP = "152.46.16.201";
+			String mysqlIP = "152.46.20.38";
 			ArrayList<String> data = new ArrayList<String>();
 			String result = "";
 			//the year data to send
@@ -449,14 +459,23 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 			return null;
 		}
 	    
+	    
 	    protected void onProgressUpdate(Object... values) {
 	        super.onProgressUpdate(values);
+	        
+	       // progressDialog = ProgressDialog.show(FragmentDestinations.this,"Loading...",  
+				//    "Loading application View, please wait...", false, false);
+			//Display the progress dialog
+			//progressDialog.show();
 	        // Only purpose of this method is to show our wait spinner, we dont
 	        // (and can't) show detailed progress updates
 	    }
 	    
 		protected void onPostExecute(Object result) {
-	        super.onPostExecute(result);
+	      
+			super.onPostExecute(result);
+		/*   removes the splash screen from the user interface signifying that the database has been completely loaded */
+			progress.dismiss();
 	    }
 		
 	}
