@@ -360,6 +360,7 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		protected void onPostExecute(Document doc) {
 	        // Parse the result obtained from api call 
 			parseGoogleDistanceMatrix(doc);
+			progress.dismiss();
 	    }
 		
 		/*
@@ -475,7 +476,7 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	      
 			super.onPostExecute(result);
 		/*   removes the splash screen from the user interface signifying that the database has been completely loaded */
-			progress.dismiss();
+			//progress.dismiss();
 	    }
 		
 	}
