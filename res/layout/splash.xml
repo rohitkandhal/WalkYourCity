@@ -1,17 +1,9 @@
-<LinearLayout
+<ImageView 
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent" 
   android:id="@+id/TheSplashLayout"
   android:layout_gravity="center"
-  android:background="@android:color/white"
-  >
-    <ImageView 
-        android:layout_width="match_parent" 
-        android:layout_height="match_parent" 
-        android:id="@+id/SplashImageView"
-        android:layout_gravity="center"        
-        android:src="@drawable/splash"        
+  android:background="@drawable/splash"        
         >
     </ImageView>
-</LinearLayout>

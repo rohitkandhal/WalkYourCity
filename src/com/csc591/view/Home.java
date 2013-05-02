@@ -3,8 +3,10 @@ package com.csc591.view;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -24,16 +26,50 @@ public class Home extends Activity implements FragmentDestinationInterface, Frag
 		
 		// Uses below to Remove notification bar but not required in our application. Helpful in games
 		//this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
+		
+		// THE CODE BELOW TO CHECK IF THE GPS IS ENABLED OR NOT
+		
+		/*
+		final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE ) ;
+
+	    if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+	        buildAlertMessageNoGps();
+	    }
+		*/
 		this.getCurrentDeviceLocation();
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_home);
+		
 
 		//ViewServer.get(this).addWindow(this);
 	}
 	
+	
+	
 	private LocationManager myLocationManager;
 	private MyLocationListener myLocationListener;
+	
+	
+
+  private void buildAlertMessageNoGps() {
+    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+           .setCancelable(false)
+           .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+               public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                   startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+               }
+           })
+           .setNegativeButton("No", new DialogInterface.OnClickListener() {
+               public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                    dialog.cancel();
+               }
+           });
+    final AlertDialog alert = builder.create();
+    alert.show();
+}
 	
 	public void getCurrentDeviceLocation()
 	{
