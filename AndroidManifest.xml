@@ -42,7 +42,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" 
             android:theme="@android:style/Theme.NoTitleBar"
-            android:name=".SplashActivity" >
+            android:name="com.csc591.view.SplashActivity" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
