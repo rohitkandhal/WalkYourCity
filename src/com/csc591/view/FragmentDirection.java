@@ -29,11 +29,10 @@ import android.view.Window;
 
 import com.csc591.DAL.Destination;
 import com.csc591.utils.GMapDirectionHelper;
-import com.csc591.view.MyLocationListener.onMyLocationChangeHandler;
+import com.csc591.view.MyLocationListener.ILocationChangeNotifier;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -41,7 +40,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 // NOTE: IMP - Ideally this class should be a fragment instead of activity but 
 // because of complexity in implementation of NestedFragment (not supported in 
 // pervious version) using Activity here. Though no difference on GUI.
-public class FragmentDirection extends Activity implements onMyLocationChangeHandler {
+public class FragmentDirection extends Activity implements ILocationChangeNotifier {
 
 	// dummy LatLng constant - Unused
 	static final LatLng NORTHHILL = new LatLng(53.558,9.927); 
@@ -64,7 +63,7 @@ public class FragmentDirection extends Activity implements onMyLocationChangeHan
 		try
 		{
 		this.myLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		this.myLocationListener = new MyLocationListener();
+		this.myLocationListener = MyLocationListener.getInstance();
 		this.myLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
 		}
 		catch (Exception e) {

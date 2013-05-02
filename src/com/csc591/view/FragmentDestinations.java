@@ -50,13 +50,13 @@ import com.csc591.DAL.DestinationDataSource;
 import com.csc591.utils.DurationComparator;
 import com.csc591.utils.GoogleDistanceMatrixReader;
 import com.csc591.view.Home.OnFooterCategorySelectionChanged;
-import com.csc591.view.MyLocationListener.onMyLocationChangeHandler;
+import com.csc591.view.MyLocationListener.ILocationChangeNotifier;
 import com.google.android.gms.maps.model.LatLng;
 
-public class FragmentDestinations extends Fragment implements OnFooterCategorySelectionChanged, onMyLocationChangeHandler{
+public class FragmentDestinations extends Fragment implements OnFooterCategorySelectionChanged, ILocationChangeNotifier{
 
-	private List<Destination> allDestinations;
-	private List<Destination> selectedDestinations;
+	private ArrayList<Destination> allDestinations;
+	private ArrayList<Destination> selectedDestinations;
 	DestinationListAdapter destinationListAdapter;
 	
 	private DestinationDataSource dataSource;
@@ -174,9 +174,16 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		// This call is for retrieving data from the server dynamically.
 		// For the time being we are using hard coded database. until we are using splash screen.
 		//new RetrieveData(getActivity().getApplicationContext()).execute();
+		this.allDestinations = new ArrayList<Destination>();
+		this.selectedDestinations = new ArrayList<Destination>();
 		
-		allDestinations = dataSource.getAllDestinations();
-		this.selectedDestinations = dataSource.getAllDestinations();
+		this.allDestinations = dataSource.getAllDestinations();
+
+		for(Destination des: this.allDestinations)
+		{
+			this.selectedDestinations.add(des);
+		}
+		
 		new GetDistanceMatrixTask().execute(this.allDestinations);
 	}
 	

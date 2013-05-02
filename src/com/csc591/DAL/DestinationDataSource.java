@@ -2,7 +2,6 @@
 package com.csc591.DAL;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -159,9 +158,9 @@ public class DestinationDataSource {
 		return dest;
 	}
 	
-	public List<Destination> getAllDestinations()
+	public ArrayList<Destination> getAllDestinations()
 	{
-		List<Destination> destinations = new ArrayList<Destination>();
+		ArrayList<Destination> destinations = new ArrayList<Destination>();
 		
 		Cursor cursor = database.query(MySQLiteHelper.TABLE_DESTINATIONS, allColumns, null, null, null, null, null);
 	
