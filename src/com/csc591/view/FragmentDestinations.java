@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -46,12 +47,10 @@ import android.widget.ListView;
 
 import com.csc591.DAL.Destination;
 import com.csc591.DAL.DestinationDataSource;
+import com.csc591.utils.DurationComparator;
 import com.csc591.utils.GoogleDistanceMatrixReader;
 import com.csc591.view.Home.OnFooterCategorySelectionChanged;
 import com.csc591.view.MyLocationListener.onMyLocationChangeHandler;
-
-
-
 import com.google.android.gms.maps.model.LatLng;
 
 public class FragmentDestinations extends Fragment implements OnFooterCategorySelectionChanged, onMyLocationChangeHandler{
@@ -215,7 +214,7 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 				this.selectedDestinations.add(des);
 			}
 		}
-		
+		Collections.sort(selectedDestinations, new DurationComparator());
 		this.destinationListAdapter.notifyDataSetChanged();
 	}
 	
@@ -290,7 +289,8 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 			this.selectedDestinations.get(index).setWalkingTime(walkingTimes.get(index));
 			this.allDestinations.get(index).setWalkingTime(walkingTimes.get(index));
 		}		
-		
+		Collections.sort(selectedDestinations, new DurationComparator());
+		Collections.sort(allDestinations, new DurationComparator());
 		ListView lv = (ListView)this.getView().findViewById(R.id.listViewDestinations);
 
 		lv.setOnItemClickListener(new OnItemClickListener() {
