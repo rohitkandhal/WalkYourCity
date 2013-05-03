@@ -82,10 +82,10 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		
 		/* Sets the splash screen in motion ...waits till the point where the database in completely loaded into the memory */
 		
-		//progress = ProgressDialog.show(this.getActivity(),"Loading...","Loading application View, please wait...", false, false);
+		progress = ProgressDialog.show(this.getActivity(),"Loading...","Loading application View, please wait...", false, false);
 		//progress = new ProgressDialog(this.getActivity(), ProgressDialog.STYLE_SPINNER);
 		//progress.setMessage("Loading...");
-		//progress.show();
+		progress.show();
 		View view = inflater.inflate(R.layout.fragment_dest_list,container,false);
 		this.setUpInitialDatabase();
 
@@ -169,11 +169,11 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		dataSource = new DestinationDataSource(this.getActivity());
 		dataSource.open();
 				
-		dataSource.CreateNewHARDCODEDDataBase();
+		//dataSource.CreateNewHARDCODEDDataBase();
 		
 		// This call is for retrieving data from the server dynamically.
 		// For the time being we are using hard coded database. until we are using splash screen.
-		//new RetrieveData(getActivity().getApplicationContext()).execute();
+		new RetrieveData(getActivity().getApplicationContext()).execute();
 		this.allDestinations = new ArrayList<Destination>();
 		this.selectedDestinations = new ArrayList<Destination>();
 		
@@ -367,6 +367,7 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		protected void onPostExecute(Document doc) {
 	        // Parse the result obtained from api call 
 			parseGoogleDistanceMatrix(doc);
+			progress.dismiss();
 	    }
 		
 		/*
@@ -410,7 +411,7 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 				e1.printStackTrace();
 			}*/
 	    	
-			String mysqlIP = "152.46.20.38";
+			String mysqlIP = "152.46.18.252";
 			ArrayList<String> data = new ArrayList<String>();
 			String result = "";
 			//the year data to send
