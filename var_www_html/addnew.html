@@ -1,0 +1,59 @@
+<html>
+
+<head>
+<title>Form Input Data</title>
+</head>
+<body>
+<table border="1">
+  <tr>
+    <td align="center"><label>Input Destinations Data</label></td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <form method="post" action="input.php">
+        <tr>
+          <td>Name</td>
+          <td><input type="text" name="name" size="20">
+          </td>
+        </tr>
+      </table>
+	<br>You can use service like <a href="http://itouchmap.com/latlong.html" target="_blank">itouchmap</a> to get co-ordinates<br>
+      <table>
+        <tr>
+          <td>Latitude</td>
+          <td><input type="text" name="lat" size="40">
+          </td>
+        </tr>
+	<tr>
+	  <td>Longitude</td>
+	  <td><input type="text" name="long" size="40">
+	  </td>
+	</tr>
+	<tr>
+	  <td>Type</td>
+	  <td><select name="type"> 
+  		<option value="0">Amusement</option>
+  		<option value="1">Landmarks</option>
+  		<option value="2">Commerce</option>
+		<option value="3">Open Space</option>
+	      </select></td>
+        </tr>
+	<tr>
+	  <td>Description</td>
+	  <td><textarea name='desc' rows="2" cols="10"></textarea></td>
+	</tr>
+	<tr>
+	<td align="center"><input type="reset"
+          name="clear" value="Clear"></td>
+          <td align="center"><input type="submit" 
+          name="submit" value="Submit"></td>
+        </tr>
+        </table>
+      </td>
+    </tr>
+</table>
+<br><br><a href="index.html">Back</a>
+</body>
+</html>
+
