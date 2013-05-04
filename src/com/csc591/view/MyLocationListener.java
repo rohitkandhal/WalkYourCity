@@ -71,10 +71,10 @@ public class MyLocationListener implements LocationListener
         altitude = location.getAltitude();
         speed = location.getSpeed(); 
         
-        //for(ILocationChangeNotifier listner: listenerCollection)
-        //{
+        for(ILocationChangeNotifier listner: listenerCollection)
+        {
         	//listner.onMyLocationChanged(location);
-        //}
+        }
     }
 
     @Override

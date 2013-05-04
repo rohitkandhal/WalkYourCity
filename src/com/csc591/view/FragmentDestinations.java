@@ -60,7 +60,8 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	DestinationListAdapter destinationListAdapter;
 	
 	private DestinationDataSource dataSource;
-
+	private LatLng currentLatLng;
+	
 	public interface FragmentDestinationInterface{
 		public void onListItemClickHandler(Destination destination);
 	}
@@ -72,15 +73,8 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 			Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		try{// Currently we start GPS in home activity so it won't be required but in case 
-			// support map on home activity then this will be required
-			//this.getCurrentDeviceLocation();
-		}
-		catch (Exception e) {
-			// TODO: handle GPS unavailable exception
-		}
 		
-		/* Sets the splash screen in motion ...waits till the point where the database in completely loaded into the memory */
+		//Sets the splash screen in motion ...waits till the point where the database in completely loaded into the memory
 		
 		progress = ProgressDialog.show(this.getActivity(),"Loading...","Loading application View, please wait...", false, false);
 		//progress = new ProgressDialog(this.getActivity(), ProgressDialog.STYLE_SPINNER);
@@ -96,7 +90,7 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		
+		this.setUpDestinationList();
 	}
 	
 	public void onAttach(Activity activity)
@@ -113,6 +107,22 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	{
 		super.onDetach();
 		homeActivityInterface = null;
+	}
+	
+	public void onResume()
+	{	 	
+		dataSource.open();	 	
+		super.onResume();	 	
+		this.addLocationListener();	 	
+		this.startLocationUpdates();	 	
+	}	 	
+
+	public void onPause()	 	
+	{	 	
+		dataSource.close();	 	
+		super.onPause();	 	
+		this.removeLocationListner();	 	
+		this.stopLocationUpdates();	 	
 	}
 	
 	public void onListViewItemClick(int position)
@@ -172,8 +182,8 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		//dataSource.CreateNewHARDCODEDDataBase();
 		
 		// This call is for retrieving data from the server dynamically.
-		// For the time being we are using hard coded database. until we are using splash screen.
 		new RetrieveData(getActivity().getApplicationContext()).execute();
+		
 		this.allDestinations = new ArrayList<Destination>();
 		this.selectedDestinations = new ArrayList<Destination>();
 		
@@ -195,18 +205,14 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		// For custom list view and interactive output.
 		ListView lv = (ListView)this.getView().findViewById(R.id.listViewDestinations);
 		lv.setAdapter(this.destinationListAdapter);
-	}
-	
-	public void onResume()
-	{
-		dataSource.open();
-		super.onResume();
-	}
+		
+		lv.setOnItemClickListener(new OnItemClickListener() {
 
-	public void onPause()
-	{
-		dataSource.close();
-		super.onPause();
+		    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+		    	 onListViewItemClick(position);
+		       }
+		   });
 	}
 	
 	@Override
@@ -225,23 +231,39 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		this.destinationListAdapter.notifyDataSetChanged();
 	}
 	
-	public void getCurrentDeviceLocation()
+	public void addLocationListener() 
+	{		 	
+		MyLocationListener.getInstance().addListener(this);	 	
+	}	 	
+			 	
+	public void removeLocationListner()	 	
+	{	 	
+		MyLocationListener.getInstance().removeListener(this);	 	
+	}	 	
+
+	public void startLocationUpdates()
 	{
-		LocationManager locationManager = (LocationManager)this.getActivity().getSystemService(Context.LOCATION_SERVICE);
-		myLocationListener = new MyLocationListener();
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
+		LocationManager locationManager = (LocationManager)this.getActivity().getSystemService(Context.LOCATION_SERVICE );  
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000000, 20, MyLocationListener.getInstance());
+	}
+			
+	public void stopLocationUpdates() 
+	{
+		LocationManager locationManager = (LocationManager)this.getActivity().getSystemService(Context.LOCATION_SERVICE );
+		locationManager.removeUpdates(MyLocationListener.getInstance());
 	}
 	
-	MyLocationListener myLocationListener; 
 	@Override
 	public void onMyLocationChanged(Location location) {
-		// TODO Auto-generated method stub
-		this.currentLatLng = new LatLng(MyLocationListener.getLat(), MyLocationListener.getLon());
+		// TODO calculate difference between the two latlng and if difference is greater than 20 meters then 
+		// call Distance Matrix api otherwise not.
+		LatLng newLatLng = new LatLng(MyLocationListener.getLat(), MyLocationListener.getLon());
+		this.currentLatLng = newLatLng;
 		
+		synchronized (this) {
+			//new GetDistanceMatrixTask().execute(this.allDestinations);
+		}
 	}
-	
-	private LatLng currentLatLng;
-	
 	
 	public LatLng getCurrentLatLng() {
 		
@@ -253,7 +275,6 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 		}
 		return currentLatLng;
 	}
-
 
 	public void setCurrentLatLng(LatLng currentLatLng) {
 		this.currentLatLng = currentLatLng;
@@ -288,26 +309,22 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	 */
 	private void onBackgroundTaskDataObtained(ArrayList<Integer> walkingTimes)
 	{
-		this.setUpDestinationList();
+		Destination temp;
 		
 		// copy Walking times to destination objects
 		for(int index = 0; index < walkingTimes.size(); index++)
 		{
-			this.selectedDestinations.get(index).setWalkingTime(walkingTimes.get(index));
-			this.allDestinations.get(index).setWalkingTime(walkingTimes.get(index));
+			temp = this.allDestinations.get(index); 
+			int uiListIndex = this.selectedDestinations.indexOf(temp);
+			temp.setWalkingTime(walkingTimes.get(index));
+			if(uiListIndex >= 0)
+			{
+				this.selectedDestinations.get(uiListIndex).setWalkingTime(walkingTimes.get(index));
+			}
 		}		
 		Collections.sort(selectedDestinations, new DurationComparator());
 		Collections.sort(allDestinations, new DurationComparator());
-		ListView lv = (ListView)this.getView().findViewById(R.id.listViewDestinations);
-
-		lv.setOnItemClickListener(new OnItemClickListener() {
-
-	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-	    	 onListViewItemClick(position);
-	       }
-	   });
-		
+		this.destinationListAdapter.notifyDataSetChanged();		
 	}
 	
 	// **************************************************************************************
@@ -470,23 +487,11 @@ public class FragmentDestinations extends Fragment implements OnFooterCategorySe
 	    
 	    protected void onProgressUpdate(Object... values) {
 	        super.onProgressUpdate(values);
-	        
-	       // progressDialog = ProgressDialog.show(FragmentDestinations.this,"Loading...",  
-				//    "Loading application View, please wait...", false, false);
-			//Display the progress dialog
-			//progressDialog.show();
-	        // Only purpose of this method is to show our wait spinner, we dont
-	        // (and can't) show detailed progress updates
 	    }
 	    
 		protected void onPostExecute(Object result) {
 	      
 			super.onPostExecute(result);
-		/*   removes the splash screen from the user interface signifying that the database has been completely loaded */
-			//progress.dismiss();
-	    }
-		
-	}
-
-	
+	    }		
+	}	
 }
